@@ -59,6 +59,11 @@
       flex: 8;
     }
 
+    .message-content img {
+      max-width: 60%;
+      height: auto;
+    }
+
     .message-username {
       flex: 2;
       font-weight: 700;
@@ -81,6 +86,16 @@
       float: left;
       font-weight: 700;
       font-size: 28px;
+      height: 60px;
+      line-height: 60px;
+      padding: 0 10px;
+      text-decoration: none;
+    }
+
+    .navbar-online {
+      color: inherit;
+      display: block;
+      float: right;
       height: 60px;
       line-height: 60px;
       padding: 0 10px;
