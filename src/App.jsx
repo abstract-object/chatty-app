@@ -12,12 +12,15 @@ class App extends Component {
     console.log("componentDidMount <App />");
     
     this.socket = new WebSocket("ws://0.0.0.0:3001");
-    this.socket.onopen = event => {
+    this.socket.onopen = () => {
       console.log("Connected to server");
     }
+
+    // Handle server data
     this.socket.onmessage = (event) => {
       const newMessage = JSON.parse(event.data);
-      console.log(newMessage)
+      
+      // Update user count or update message list, depending on received data's type
       if (newMessage.type === "clientCount") {
         this.setState({clients: newMessage.value});
       } else {
@@ -40,11 +43,14 @@ class App extends Component {
     );
   }
 
+  // New message function that is passed to chatbar, sends it to server
   addMessage = message => {
     message.type = "incomingMessage";
     this.socket.send(JSON.stringify(message));
   }
-
+  
+  // Update username function that is passed to chatbar, changes then sends
+  // notification to server
   changeUsername = newUsername => {
     const nameMessage = {
       type: "postNotification",

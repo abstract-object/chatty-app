@@ -22,16 +22,21 @@ const wss = new SocketServer({ server });
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected');
+
+  // Each user will get a random hex code on connecting
   ws.color = "#000000".replace(/0/g, () => {
     return (~~(Math.random()*16)).toString(16);
   });
-  wss.clients.forEach(function each(client) {
+
+  // Update user count when a user connects
+  wss.clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify({type: "clientCount", value: wss.clients.size}));
     }
   });
   
-  ws.on('message', incoming = (message) => {
+  // Give each message a unique id and the associated user's colour
+  ws.on('message', (message) => {
     message = JSON.parse(message);
     message.id = uuidv1();
     message.userColor = ws.color;
@@ -39,7 +44,8 @@ wss.on('connection', (ws) => {
       message.type = "incomingNotification";
     }
     
-    wss.clients.forEach(function each(client) {
+    // Broadcast new message back to every connected user
+    wss.clients.forEach(client => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify(message));
       }
@@ -47,7 +53,16 @@ wss.on('connection', (ws) => {
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () => {
+    console.log('Client disconnected')
+
+    // Update user count when user disconnects
+    wss.clients.forEach(client => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify({type: "clientCount", value: wss.clients.size}));
+      }
+    });
+  });
 });
 
 

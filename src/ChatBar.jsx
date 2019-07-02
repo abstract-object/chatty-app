@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 
+// Update username and sends new message when enter is pressed on appropriate input field
 class ChatBar extends Component {
   render() {
     return (

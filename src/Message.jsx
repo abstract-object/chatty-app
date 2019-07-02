@@ -1,5 +1,7 @@
-import React, {Component} from 'react';
+import React from 'react';
 
+// Renders notification of name change and messages differently depending on type
+// also automatically generates images if an image url is detected
 const Message = ({message}) => {
   return (
     <main className={message.type === "incomingMessage" && "message"}>
